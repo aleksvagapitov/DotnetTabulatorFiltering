@@ -22,9 +22,9 @@ namespace DotnetTabulatorFiltering.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTabulatorData (int page, int size, Dictionary<string, Dictionary<string, string>> filters)
+        public async Task<IActionResult> GetTabulatorData (int page, int size, List<Dictionary<string, string>> filters, List<Dictionary<string, string>> sorters)
         {
-            return Ok (await _repository.GetFilteredData (page, size, filters));
+            return Ok (await _repository.GetFilteredData (page, size, filters, sorters));
         }
 
         [ResponseCache (Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

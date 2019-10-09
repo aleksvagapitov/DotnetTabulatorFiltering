@@ -14,19 +14,18 @@ namespace DotnetTabulatorFiltering.Models
             _context = context;
         }
 
-        public async Task<TabulatorViewModel> GetFilteredData (int page, int size, Dictionary<string, Dictionary<string, string>> filters)
+        public async Task<TabulatorViewModel> GetFilteredData (int page, int size, List<Dictionary<string, string>> filters, List<Dictionary<string, string>> sorters)
         {
             var contactFilters = new Filters<Contact> ();
             var contactSorts = new Sorts<Contact> ();
 
+            // Building Filters
             if (filters != null)
             {
-                foreach (var filter in filters.Keys)
+                foreach (var filter in filters)
                 {
-                    if (filter == "page" || filter == "size")
-                        continue;
-                    var field = filters[filter]["field"];
-                    var value = filters[filter]["value"];
+                    var field = filter["field"];
+                    var value = filter["value"];
                     switch (field)
                     {
                         case "firstName":
@@ -56,7 +55,25 @@ namespace DotnetTabulatorFiltering.Models
                 }
             }
 
-            contactSorts.Add (true, x => x.Id);
+            // Building Sortring
+            if (sorters != null)
+            {
+                foreach (var sorter in sorters)
+                {
+                    var field = sorter["field"];
+                    var dir = sorter["dir"] == "asc" ? true : false;
+                    switch (field)
+                    {
+                        case "age":
+                            contactSorts.Add (true, x => x.Age, dir);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            else
+                contactSorts.Add (true, x => x.Id);
 
             var contacts = await _context.Contacts.PaginateAsync (page, size, contactSorts, contactFilters);
             // mapper.Map<ViewModel>(contacts);

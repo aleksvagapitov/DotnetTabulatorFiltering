@@ -1,9 +1,13 @@
+var baseUrl = document.location.origin;
+var apiEndpoint = "/Home/GetTabulatorData";
+
 var table = new Tabulator("#example-table", {
     pagination: "remote",
-    ajaxURL: "https://localhost:5001/Home/GetTabulatorData",
+    ajaxURL: baseUrl + apiEndpoint,
     paginationSize: 10,
     paginationSizeSelector: [10, 20, 30, 50],
     ajaxFiltering: true,
+    ajaxSorting: true,
     columns: [
         { title: "FirstName", field: "firstName", sorter: "string", headerFilter: "input" },
         { title: "LastName", field: "lastName", sorter: "string", headerFilter: "input" },
